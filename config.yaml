@@ -1,0 +1,60 @@
+key:         salesforcedatasync
+id:          salesforcedatasync
+name:        'Salesforce Data Sync'
+description: 'Sync Salesforce data to Movable Type'
+author_name: 'Dan Wolfgang, Endevver'
+author_link: http://endevver.com
+plugin_link: https://github.com/endevver/mt-plugin-salesforce-data-sync
+version:     1.0.0
+
+config_sttings:
+    SalesforceDataSyncUsername:
+        default: ''
+    SalesforceDataSyncPassword:
+        default: ''
+
+tasks:
+    salesforce_data_sync:
+        label:     'Salesforce data sync'
+        # 15 minutes
+        frequency: 900
+        code:      $SalesforceDataSync::SalesforceDataSync::Task::task
+
+task_workers:
+    salesforce_data_sync_worker:
+        label: 'Salesforce data sync worker'
+        class: 'SalesforceDataSync::Worker'
+
+applications:
+    cms:
+        menus:
+            tools:salesforce_data_sync:
+                label:      'Salesforce Data Sync'
+                order:      101
+                mode:       sf_sync.list_defs
+                permission: administer
+                view:
+                    - system
+        methods:
+            sf_sync.list_defs:           $SalesforceDataSync::SalesforceDataSync::CMS::list_data_sync_definitions
+            sf_sync.start_sync_dialog:   $SalesforceDataSync::SalesforceDataSync::CMS::start_sync_dialog
+            sf_sync.start_complete_sync: $SalesforceDataSync::SalesforceDataSync::CMS::start_complete_sync
+
+system_filters:
+    log: $SalesforceDataSync::SalesforceDataSync::CMS::system_filters
+
+list_actions:
+    entry:
+        salesforce_data_sync:
+            label: Manually Resync Salesforce Data
+            code: $SalesforceDataSync::SalesforceDataSync::CMS::list_action_entry
+            condition: $SalesforceDataSync::SalesforceDataSync::CMS::action_condition
+
+page_actions:
+    entry:
+        salesforce_data_sync:
+            label: Manually Resync Salesforce Data
+            code: $SalesforceDataSync::SalesforceDataSync::CMS::page_action_entry
+            condition: $SalesforceDataSync::SalesforceDataSync::CMS::action_condition
+
+

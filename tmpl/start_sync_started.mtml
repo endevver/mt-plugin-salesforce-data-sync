@@ -1,0 +1,29 @@
+<mt:SetVarBlock name="page_title">
+    Salesforce Data Sync: <mt:Var name="label">
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="html_head" append="1">
+    <script type="text/javascript" src="<mt:Var name="static_uri">js/dialog.js"></script>
+</mt:SetVarBlock>
+
+<mt:Include name="dialog/header.tmpl">
+
+<h2>Complete Data Sync Started</h2>
+
+<p>
+    A complete data sync job has been started. Progress can be monitored in the
+    Activity Log and Publish Queue.
+</p>
+
+<div class="actions-bar">
+    <div class="actions-bar-inner pkg actions">
+        <button
+            type="submit"
+            accesskey="x"
+            class="action button cancel close mt-close-dialog"
+            title="<__trans phrase="Close (x)">"
+            ><__trans phrase="Close"></button>
+    </div>
+</div>
+
+<mt:include name="dialog/footer.tmpl">

@@ -1,0 +1,62 @@
+<mt:SetVarBlock name="page_title">
+    Salesforce Data Sync: <mt:Var name="label">
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="html_head" append="1">
+    <script type="text/javascript" src="<mt:Var name="static_uri">js/dialog.js"></script>
+</mt:SetVarBlock>
+
+<mt:Include name="dialog/header.tmpl">
+
+<h2>Complete Data Sync</h2>
+
+<p>
+    All data from Salesforce will be resynced to Movable Type in
+    <mt:Var name="blog_name">. The sync will queue records into the queue for
+    processing. With a large sync job, this can take quite a while -- refer to
+    the Activity Log and Publish Queue to follow along with progress.
+</p>
+
+<form name="start_sync"
+    method="post"
+    action="<mt:Var name="script_url">"
+    onsubmit="document.getElementById('continue').disabled = true; document.getElementById('working').style.display = 'block';">
+
+    <input type="hidden" name="__mode" value="sf_sync.start_complete_sync" />
+    <input type="hidden" name="def_id" value="<mt:Var name="def_id">" />
+
+    <mt:If name="republish">
+        <mtapp:Setting
+            label="Republish During Data Sync"
+            hint="Normally, content is automatically republished when data is re-synced. During a complete sync, however, a better process is to manually republish after the sync is complete. Checking this box enables republishing during this complete sync."
+            show_hint="1"
+            id="republish">
+            <input type="checkbox" name="republish" id="republish"
+                value="0" />
+        </mtapp:Setting>
+    </mt:If>
+
+    <img src="<mt:Var name="static_uri">images/indicator.white.gif"
+        id="working"
+        style="position: absolute; display: none;" />
+
+    <div class="actions-bar">
+        <div class="actions-bar-inner pkg actions">
+            <button
+                id="continue"
+                type="submit"
+                accesskey="s"
+                title="<__trans phrase="Start">"
+                class="action primary button"
+                >Start</button>
+            <button
+                type="submit"
+                accesskey="x"
+                class="action button cancel close mt-close-dialog"
+                title="<__trans phrase="Close (x)">"
+                ><__trans phrase="Close"></button>
+        </div>
+    </div>
+</form>
+
+<mt:include name="dialog/footer.tmpl">

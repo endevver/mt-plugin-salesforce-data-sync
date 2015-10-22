@@ -1,0 +1,83 @@
+<mt:SetVarBlock name="page_title">
+    Salesforce Data Sync Definitions
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="system_msg">
+    <div id="msg-block">
+        <mt:If name="badge_saved">
+            <mtapp:StatusMsg
+                class="success">
+                Success!
+            </mtapp:StatusMsg>
+        </mt:If>
+    </div>
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="related_content">
+    <mtapp:Widget
+        id="useful-links"
+        label="<__trans phrase="Activity Log">">
+        <ul>
+            <li>
+                <a href="<mt:Var name="script_url">?__mode=list&amp;_type=log&filter_key=salesforcedatasync_activity">
+                    All Activity
+                </a>
+            </li>
+            <li>
+                <a href="<mt:Var name="script_url">?__mode=list&amp;_type=log&filter_key=salesforcedatasync_warnings">
+                    Warnings
+                </a>
+            </li>
+            <li>
+                <a href="<mt:Var name="script_url">?__mode=list&amp;_type=log&filter_key=salesforcedatasync_errors">
+                    Errors
+                </a>
+            </li>
+        </ul>
+    </mtapp:Widget>
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="html_head">
+    <style>
+        .description .error {
+            background: red;
+            padding: 3px 5px;
+        }
+    </style>
+</mt:SetVarBlock>
+
+<mt:Include name="include/header.tmpl">
+
+<mt:Loop name="defs">
+    <fieldset id="def-<mt:Var name="def_id">">
+
+        <h2><mt:Var name="label"></h2>
+        <div class="description"><mt:Var name="description"></div>
+
+        <mtapp:Setting
+            label="Last Run"
+            id="last_run">
+            <p><mt:Var name="last_run"></p>
+        </mtapp:Setting>
+
+        <mtapp:Setting
+            label="Automatic Sync?"
+            id="auto_sync">
+            <p><mt:Var name="auto_sync"></p>
+        </mtapp:Setting>
+
+        <mtapp:Setting
+            id="manual_sync"
+            label="Manual Sync">
+            <button
+                onclick="return jQuery.fn.mtDialog.open('<mt:Var name="script_url">?__mode=sf_sync.start_sync_dialog&def_id=<mt:Var name="def_id">')"
+                class="action button"
+                title="Run Sync Update">
+                Run Complete Sync
+            </button>
+        </mtapp:Setting>
+
+    </fieldset>
+</mt:Loop>
+
+<mt:Include name="include/footer.tmpl">

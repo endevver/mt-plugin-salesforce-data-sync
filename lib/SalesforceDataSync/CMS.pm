@@ -244,7 +244,7 @@ sub _action_sync {
 sub action_condition {
     my $app = MT->instance;
 
-    return 0 unless $app->can('blog');
+    return 0 unless $app->blog;
 
     my $blog = $app->blog;
 
@@ -256,7 +256,7 @@ sub action_condition {
             return 1;
         }
     }
-    
+
     return 0;
 }
 

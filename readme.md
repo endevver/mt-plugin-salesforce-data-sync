@@ -201,11 +201,13 @@ Of course, if `republish` is disabled ("0") then the `build_dependencies` key ha
 
 # Use
 
+Salesforce data is automatically synced. You don't *need* to do anything!
+
 ## Monitoring Activity
 
 Salesforce data is automatically synced with Movable Type and you can monitor
-that activity to understand what is happening. The following process is how
-content is synced to Movable Type:
+that activity to understand what is happening (assuming automatic sync hasn't
+been disabled). The following process is how content is synced to Movable Type:
 
 1. A data sync processing task is run every 15 minutes. Each definition is
 processed, looking for any new or updated content since the last task was run.
@@ -223,7 +225,9 @@ Manager](https://github.com/endevver/mt-plugin-pqmanager/releases) plugin. It's
 helpful to enable the Worker column (click Display Options) and filtering on
 the Worker can also better show you the sync jobs ("Worker is
 SalesforceDataSync::Worker"). Notice that any sync job is a very low priority
-(1) so that it doesn't impact other jobs, such as for publishing content.
+(1) so that it doesn't impact other jobs, such as for publishing content. As
+with everything else in the queue, SF sync jobs get executed thanks to
+`run-periodic-tasks`.
 
   The File Path column tell you about the sync job:
   
@@ -235,7 +239,42 @@ SalesforceDataSync::Worker"). Notice that any sync job is a very low priority
       includes the record Id, which is a unique identifier in Salesforce. (Your
       field mapping should also include a filter for this value, too.)
 
-## Syncing Data
+  Each job is processed using the URL to retrieve the record from Salesforce and
+  the field mapping to update an existing Entry or create a new one, as
+  necessary. Note that this means any data in the Entry is overwritten by the SF
+  record's data.
+
+## Manually Syncing Data
+
+Syncs happen automatically (every 15 minutes, assuming automatic syncing wasn't
+disabled for a given definition), but there are scenarios where you might want
+to manually resync data. Most specifically, if automatic sync iss disabled or if
+you want to immediately see updated data.
+
+* System Overview > Tools > Salesforce Data Sync will list all of the Salesforce
+  Data Sync Definitions, and each definition tells you a little about it: when
+  it was last run and if it's set to sync automatically, as well as a button to
+  start a complete sync.
+
+  Clicking the Run Complete Sync button will open a popup dialog that gives the
+  opportunity to run a complete resync of the data for that definition. By
+  default, a complete sync will *not* republish the blog while syncing data.
+  Republishing after a complete sync has finished is a more expedient way to
+  complete the process, but a checkbox allows you to enable republishing during
+  the sync.
+
+  Click the Start button to begin the sync. Records will be added to the queue
+  and processed as detailed above in Monitoring Activity.
+
+* Resync a few records by going to Manage Entries (or Manage Pages, if the sync
+  definition specifies the page object type) where one of the items in the "More
+  Actions..." dropdown is "Manually Resync Salesforce Data." Data is immediately
+  resynced and not processed through the queue.
+
+* Resync a single record by going to an individual Entry (or Page). In the right
+  column an "Actions" widget will appear with the option to "Manually Resync
+  Salesforce Data." Data is immediately resynced and not processed through the
+  queue.
 
 # License
 

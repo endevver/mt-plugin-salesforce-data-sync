@@ -81,8 +81,8 @@ reference the same data in order for records to be updated (as opposed to be
 recreated anew) during subsequent syncs. This is managed with two keys, both
 required:
 
-* `sf_id_field`: A unique field in Salesforce. The `Id` field is a good choice; Salesforce automatically
-  maintains it.
+* `sf_id_field`: A unique field in Salesforce. The `Id` field is a good choice;
+  Salesforce automatically maintains it.
 
 * `mt_id_field`: specify a field for the destination of the SF field contents
   (in the example, the `Id` field). Note that this *is not and can not* be
@@ -120,7 +120,11 @@ mapped in the following format:
                 [MT field]: [Salesforce field]
 
 Movable Type's standard and Custom Fields can be specified. Note that Custom
-Fields require the `field.` prefix be added to the basename. When creating a Custom Field for the synced content, use the simplest field types possible: Single-Line Text (`text`) and Multi-Line Text (`textarea`). Other field types might be more appropriate or display in a more useful manner, but syncing may not work or may not sync as expected.
+Fields require the `field.` prefix be added to the basename. When creating a
+Custom Field for the synced content, use the simplest field types possible:
+Single-Line Text (`text`) and Multi-Line Text (`textarea`). Other field types
+might be more appropriate or display in a more useful manner, but syncing may
+not work or may not sync as expected.
 
 For most data, that's it! Easy! However, there are a few Salesforce fields that
 are required to be included in your mapping:
@@ -153,9 +157,15 @@ To merge several Salesforce fields into a single MT field, use an expanded synta
                         - [Salesforce field 2]
                         - [Salesforce field 3]
 
-The identified fields will be joined (using the `separator` field value) to form a single value that can be stored in the specified MT field.
+The identified fields will be joined (using the `separator` field value) to
+form a single value that can be stored in the specified MT field.
 
-If a field has boolean (true/false) values then those values will be synced, too. (SF returns boolean values as literally "true" and "false.") However, this is sometimes not actually as helpful as having a named value. Use the `value` key to specify a value to be synced if the field is true. Buildign on the previous example where the SF fields "Apple," "Banana," and "Cantaloupe" are boolean values:
+If a field has boolean (true/false) values then those values will be synced,
+too. (SF returns boolean values as literally "true" and "false.") However, this
+is sometimes not actually as helpful as having a named value. Use the `value`
+key to specify a value to be synced if the field is true. Buildign on the
+previous example where the SF fields "Apple," "Banana," and "Cantaloupe" are
+boolean values:
 
     salesforce_data_sync:
         my_sf_data:
@@ -171,7 +181,9 @@ If a field has boolean (true/false) values then those values will be synced, too
                         - Cantaloupe
                             value: cantaloupe
 
-Without the `value` key these SF fields my be built into a string reading `false, true, true`. But with the `value` key they can be built into a string of `banana, cantaloupe` -- far more useful when strictly publishing a list!
+Without the `value` key these SF fields my be built into a string reading
+`false, true, true`. But with the `value` key they can be built into a string
+of `banana, cantaloupe` -- far more useful when strictly publishing a list!
 
 ## Publish Control
 
@@ -185,11 +197,19 @@ Synced content is unpublished by default. Within your definition use the
                 field: field.is_public
                 value: 'true'
 
-In this example, an MT Custom Field named "Is Public" is used. If the value of this field is "true" then the object (perhaps an Entry) should be published. Note that this requires that the Custom Field `field.is_public` has been included in the `fields` hash so that data from Salesforce is copied to it. In this example, Salesforce might provide values of "true" or "false"; Entries where the Is Public field have a value of "false" would remain unpublished.
+In this example, an MT Custom Field named "Is Public" is used. If the value of
+this field is "true" then the object (perhaps an Entry) should be published.
+Note that this requires that the Custom Field `field.is_public` has been
+included in the `fields` hash so that data from Salesforce is copied to it. In
+this example, Salesforce might provide values of "true" or "false"; Entries
+where the Is Public field have a value of "false" would remain unpublished.
 
 # Publishing
 
-For any content that is set to publish, the keys `republish` and `build_dependencies` provide control over if and how publishing happens after a sync. These fields are optional and are enabled by default; they only need to be included to disable their capabilities:
+For any content that is set to publish, the keys `republish` and
+`build_dependencies` provide control over if and how publishing happens after a
+sync. These fields are optional and are enabled by default; they only need to
+be included to disable their capabilities:
 
     salesforce_data_sync:
         my_sf_data:
@@ -197,7 +217,8 @@ For any content that is set to publish, the keys `republish` and `build_dependen
             republish: 1
             build_dependencies: 0
 
-Of course, if `republish` is disabled ("0") then the `build_dependencies` key has no impact.
+Of course, if `republish` is disabled ("0") then the `build_dependencies` key
+has no impact.
 
 # Use
 

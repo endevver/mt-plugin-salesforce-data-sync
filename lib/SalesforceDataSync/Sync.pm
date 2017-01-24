@@ -177,13 +177,25 @@ sub _process_sync_def {
     # Add the time limiter to only get data newer than the previous sync. This
     # is empty if the sync was manually started or if a sync has never been run.
     $query .= $query_time_limiter;
+    $query = $sf_url . "/services/data/v23.0/query?q=" . $query;
+
+    $app->log({
+        category => 'Salesforce Data Sync Query',
+        class    => 'salesforcedatasync',
+        blog_id  => $blog->id,
+        level    => $app->model('log')->INFO(),
+        message  => 'The Salesforce Data Sync definition &ldquo;'
+            . $definition->{definition_name} . '&rdquo; submitted the '
+            . 'following query to Salesforce: ' . $query,
+    })
+        if $plugin->get_config_value('log_queries');
 
     my $mech = WWW::Mechanize->new();
     $mech->agent('Mozilla/5.0');
     $mech->add_header( "Authorization" => 'Bearer ' . $sid );
 
     # Submit the query.
-    $mech->get( $sf_url . "/services/data/v23.0/query?q=" . $query );
+    $mech->get( $query );
 
     # Convert the JSON result into a hash.
     my $result = {};
@@ -213,6 +225,19 @@ sub _process_sync_def {
         # If the $next_records_url was set that means there are more records to
         # handle.
         if ( $next_records_url ) {
+            $app->log({
+                category => 'Salesforce Data Sync Query',
+                class    => 'salesforcedatasync',
+                blog_id  => $blog->id,
+                level    => $app->model('log')->INFO(),
+                message  => 'The Salesforce Data Sync definition &ldquo;'
+                    . $definition->{definition_name} . '&rdquo; submitted the '
+                    . 'following query to Salesforce: '
+                    . $sf_url . $next_records_url,
+            })
+                if $plugin->get_config_value('log_queries');
+
+
             # Submit the query.
             $mech->get( $sf_url . $next_records_url );
 
@@ -364,6 +389,18 @@ sub sync_record {
     # Log message default values, presuming that an entry is being updated.
     my $log_msg      = 'Salesforce data sync definition &ldquo;'
         . $definition->{definition_name} . '&rdquo; ';
+
+    my $plugin = $app->component('SalesforceDataSync');
+    $app->log({
+        category => 'Salesforce Data Sync Query',
+        class    => 'salesforcedatasync',
+        blog_id  => $blog->id,
+        level    => $app->model('log')->INFO(),
+        message  => 'The Salesforce Data Sync definition &ldquo;'
+            . $definition->{definition_name} . '&rdquo; submitted the '
+            . 'following query to Salesforce: ' . $sf_url . $record_url,
+    })
+        if $plugin->get_config_value('log_queries');
 
     # Submit the query for the record data.
     my $sid = _get_session_id($app);

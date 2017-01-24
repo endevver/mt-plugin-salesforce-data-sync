@@ -68,6 +68,8 @@ sub list_data_sync_definitions {
 
     $param->{defs} = \@parsed;
 
+    $param->{log_queries} = $plugin->get_config_value('log_queries');
+
     return $plugin->load_tmpl('list_defs.mtml', $param);
 }
 
@@ -150,7 +152,7 @@ sub system_filters {
                     args => { value => MT::Log::WARNING() },
                 },
             ],
-            order => 500,
+            order => 501,
         },
         salesforcedatasync_errors => {
             label => 'Salesforce Data Sync errors',
@@ -164,9 +166,32 @@ sub system_filters {
                     args => { value => MT::Log::ERROR() },
                 },
             ],
-            order => 500,
+            order => 502,
         },
-    }
+        salesforcedatasync_queries => {
+            label => 'Salesforce Data Sync Salesforce queries',
+            items => [
+                {
+                    type => 'class',
+                    args => { value => 'salesforcedatasync' },
+                },
+                {
+                    type => 'category',
+                    args => {
+                        option => 'contains',
+                        string => 'Salesforce Data Sync Query',
+                    },
+                },
+            ],
+            order => 503,
+            condition => sub {
+                # Only show if Log Queries is enabled in plugin settings
+                my $plugin = MT->component('SalesforceDataSync');
+                return 1 if $plugin->get_config_value('log_queries');
+                return 0;
+            },
+        },
+    };
 }
 
 # This is the "Manually Resync Salesforce Data" plugin action on the Manage

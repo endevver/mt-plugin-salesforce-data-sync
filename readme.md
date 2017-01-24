@@ -61,6 +61,11 @@ The first key in the example is `definition_name`, which is really just a
 friendly name for your definition, mostly used in logging activity. This is
 required.
 
+In the System Overview > Plugins settings screen you'll see an option to record
+the Salesforce queries to the Activity Log. With this option enabled, you can
+filter the Activity Log to show only SF queries -- use the "Salesforce Data Sync
+Salesforce queries" System Filter.
+
 ## Sync Source and Destination Configuration
 
 The `api_base_url` is required. The SF user will have a URL to authenticate to,

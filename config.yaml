@@ -13,6 +13,13 @@ config_sttings:
     SalesforceDataSyncPassword:
         default: ''
 
+settings:
+    log_queries:
+        default: 0
+        scope: system
+
+system_config_template: system_config_template.mtml
+
 tasks:
     salesforce_data_sync:
         label:     'Salesforce data sync'

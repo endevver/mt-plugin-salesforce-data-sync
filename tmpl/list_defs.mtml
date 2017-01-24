@@ -33,6 +33,13 @@
                     Errors
                 </a>
             </li>
+        <mt:If name="log_queries">
+            <li>
+                <a href="<mt:Var name="script_url">?__mode=list&amp;_type=log&filter_key=salesforcedatasync_queries">
+                    Salesforce Queries
+                </a>
+            </li>
+        </mt:If>
         </ul>
     </mtapp:Widget>
 </mt:SetVarBlock>
